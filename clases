@@ -1,0 +1,28 @@
+import os
+import io
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+from scipy.io import loadmat, whosmat
+
+# Carpeta donde se guardan todos los gráficos
+CARPETA_GRAFICOS = os.path.join(os.path.dirname(os.path.abspath(__file__)), "graficos")
+
+
+# =====================================================================
+# FUNCIONES DE VALIDACIÓN
+# =====================================================================
+
+def pedir_entero(mensaje, minimo, maximo):
+    while True:
+        texto = input(mensaje)
+        try:
+            numero = int(texto)
+        except ValueError:
+            print("Error: debe escribir un número entero.")
+            continue
+
+        if numero < minimo or numero > maximo:
+            print("Error: el número debe estar entre", minimo, "y", maximo)
+        else:
+            return numero
