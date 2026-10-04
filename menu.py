@@ -25,3 +25,16 @@ def cargar_mat(registro):
         print("Archivo cargado correctamente:", objeto.nombre)
     except Exception as error:
         print("No se pudo cargar el archivo:", error)
+# ---------------------------------------------------------------------
+# BÚSQUEDA
+# ---------------------------------------------------------------------
+
+def buscar_archivo(registro):
+    texto = input("Escriba parte del nombre a buscar: ")
+    encontrados = registro.buscar(texto)
+    if len(encontrados) == 0:
+        print("No se encontró ningún archivo con ese nombre.")
+    else:
+        print("Archivos encontrados:")
+        for objeto in encontrados:
+            print("  -", objeto.tipo, objeto.nombre)
