@@ -26,3 +26,31 @@ def pedir_entero(mensaje, minimo, maximo):
             print("Error: el número debe estar entre", minimo, "y", maximo)
         else:
             return numero
+
+def pedir_ruta(mensaje, extension):
+    while True:
+        ruta = input(mensaje).strip().strip('"')
+        if not os.path.isfile(ruta):
+            print("Error: ese archivo no existe. Revise la ruta.")
+        elif not ruta.lower().endswith(extension):
+            print("Error: el archivo debe terminar en", extension)
+        else:
+            return ruta
+
+
+def elegir_de_lista(titulo, lista):
+    print(titulo)
+    for i in range(len(lista)):
+        print("  ", i + 1, ")", lista[i])
+    posicion = pedir_entero("Elija una opción: ", 1, len(lista))
+    return lista[posicion - 1]
+
+
+def guardar_y_mostrar(nombre):
+    if not os.path.exists(CARPETA_GRAFICOS):
+        os.makedirs(CARPETA_GRAFICOS)
+    ruta = os.path.join(CARPETA_GRAFICOS, nombre + ".png")
+    plt.savefig(ruta, dpi=150)
+    print("Gráfico guardado en:", ruta)
+    plt.show()
+    plt.close()
