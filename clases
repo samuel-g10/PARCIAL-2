@@ -85,3 +85,16 @@ class ArchivoCSV:
             raise ValueError("El CSV debe tener las columnas 'time_ms' y 'condition'.")
 
         self.datos = datos.set_index("time_ms")
+
+    def __str__(self):
+        buffer = io.StringIO()
+        self.datos.info(buf=buffer)
+
+        texto = "=" * 60 + "\n"
+        texto += "ARCHIVO CSV: " + self.nombre + "\n"
+        texto += "=" * 60 + "\n"
+        texto += "--- info() ---\n"
+        texto += buffer.getvalue()
+        texto += "\n--- describe() ---\n"
+        texto += self.datos.describe().to_string()
+        return texto
