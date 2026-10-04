@@ -219,3 +219,61 @@ class ArchivoMAT:
         resultado = tramo[canales[0] - 1]
         for i in range(1, len(canales)):
             resultado = funcion(resultado, tramo[canales[i] - 1])
+
+        nombre_op = funcion.__name__
+        if nombre_op == "suma":
+            titulo = "Suma de los 4 canales"
+            unidad = "µV"
+        elif nombre_op == "resta":
+            titulo = "Resta de los 4 canales"
+            unidad = "µV"
+        else:
+            titulo = "Multiplicación de los 4 canales"
+            unidad = "µV⁴"   
+
+        plt.figure(figsize=(12, 8))
+
+
+        plt.subplot(2, 1, 1)
+        for c in canales:
+            plt.plot(tiempo, tramo[c - 1], label="Canal " + str(c))
+        plt.title("Canales seleccionados - " + self.nombre)
+        plt.xlabel("Tiempo (s)")
+        plt.ylabel("Amplitud (µV)")
+        plt.legend(loc="upper right")
+
+        plt.subplot(2, 1, 2)
+        plt.plot(tiempo, resultado, color="black", label=titulo)
+        plt.title(titulo)
+        plt.xlabel("Tiempo (s)")
+        plt.ylabel("Resultado (" + unidad + ")")
+        plt.legend(loc="upper right")
+
+        plt.tight_layout()
+        nombre_sin_ext = self.nombre.replace(".mat", "")
+        guardar_y_mostrar(nombre_sin_ext + "_" + nombre_op)
+
+def promedio_y_desviacion(self, eje1, eje2):
+        """Calcula promedio y desviación estándar sobre la matriz 3D original."""
+
+        ejes = (eje1, eje2)
+        promedio = np.mean(self.matriz, axis=ejes)
+        desviacion = np.std(self.matriz, axis=ejes)
+
+        print("\nForma del vector de promedios:", promedio.shape)
+        print("Forma del vector de desviaciones estándar:", desviacion.shape)
+
+        nombres_ejes = ["canales", "muestras", "ensayos"]
+        eje_restante = 3 - eje1 - eje2
+
+        plt.figure(figsize=(8, 6))
+        plt.boxplot([promedio, desviacion])
+        plt.xticks([1, 2], ["Promedio", "Desviación estándar"])
+        plt.title("Distribución por " + nombres_ejes[eje_restante] +
+                  "\n(calculado sobre ejes: " + nombres_ejes[eje1] +
+                  " y " + nombres_ejes[eje2] + ") - " + self.nombre)
+        plt.ylabel("Amplitud (µV)")
+        plt.xlabel("Estadístico")
+
+        nombre_sin_ext = self.nombre.replace(".mat", "")
+        guardar_y_mostrar(nombre_sin_ext + "_boxplot_ejes" + str(eje1) + str(eje2))
