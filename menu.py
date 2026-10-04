@@ -135,3 +135,53 @@ def menu_mat(objeto):
                 print("Error: los dos ejes deben ser diferentes.")
                 eje2 = pedir_entero("Segundo eje (0-2): ", 0, 2)
             objeto.promedio_y_desviacion(eje1, eje2)
+
+# ---------------------------------------------------------------------
+# MENÚ PRINCIPAL
+# ---------------------------------------------------------------------
+
+def trabajar_con_archivo(registro):
+    if registro.cantidad() == 0:
+        print("Primero debe cargar al menos un archivo.")
+        return
+
+    print("\nArchivos cargados:")
+    registro.listar()
+    posicion = pedir_entero("Elija el archivo con el que quiere trabajar: ", 1, registro.cantidad())
+    objeto = registro.obtener(posicion)
+
+    if objeto.tipo == "CSV":
+        menu_csv(objeto)
+    else:
+        menu_mat(objeto)
+
+
+def main():
+    registro = Registro()
+
+    while True:
+        print("\n===== SISTEMA DE MONITOREO EEG (ERP) =====")
+        print("1. Cargar archivo CSV")
+        print("2. Cargar archivo MAT")
+        print("3. Ver archivos cargados")
+        print("4. Buscar un archivo cargado")
+        print("5. Trabajar con un archivo cargado")
+        print("0. Salir")
+        opcion = pedir_entero("Opción: ", 0, 5)
+
+        if opcion == 0:
+            print("Hasta luego.")
+            break
+        elif opcion == 1:
+            cargar_csv(registro)
+        elif opcion == 2:
+            cargar_mat(registro)
+        elif opcion == 3:
+            registro.listar()
+        elif opcion == 4:
+            buscar_archivo(registro)
+        elif opcion == 5:
+            trabajar_con_archivo(registro)
+
+
+main()
