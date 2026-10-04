@@ -25,6 +25,7 @@ def cargar_mat(registro):
         print("Archivo cargado correctamente:", objeto.nombre)
     except Exception as error:
         print("No se pudo cargar el archivo:", error)
+
 # ---------------------------------------------------------------------
 # BÚSQUEDA
 # ---------------------------------------------------------------------
@@ -38,3 +39,38 @@ def buscar_archivo(registro):
         print("Archivos encontrados:")
         for objeto in encontrados:
             print("  -", objeto.tipo, objeto.nombre)
+
+# ---------------------------------------------------------------------
+# SUBMENÚ CSV
+# ---------------------------------------------------------------------
+
+def menu_csv(objeto):
+    while True:
+        print("\n--- Archivo CSV:", objeto.nombre, "---")
+        print("1. Ver información del archivo (info y describe)")
+        print("2. Graficar por condición (stem, histograma y scatter)")
+        print("3. Diferencia interhemisférica entre dos canales")
+        print("0. Volver")
+        opcion = pedir_entero("Opción: ", 0, 3)
+
+        if opcion == 0:
+            break
+
+        elif opcion == 1:
+            print(objeto)
+
+        elif opcion == 2:
+            condicion = elegir_de_lista("Condiciones disponibles:", objeto.obtener_condiciones())
+            canales = objeto.obtener_canales()
+            canal = elegir_de_lista("\nCanal para el stem y el histograma:", canales)
+            canal_x = elegir_de_lista("\nCanal para el eje X del scatter:", canales)
+            canal_y = elegir_de_lista("\nCanal para el eje Y del scatter:", canales)
+            objeto.graficar_condicion(condicion, canal, canal_x, canal_y)
+
+        elif opcion == 3:
+            print("Pares homólogos (izquierda-derecha): FC3-FC4, C3-C4, CP3-CP4")
+            canales = objeto.obtener_canales()
+            canal1 = elegir_de_lista("\nPrimer canal (se le resta el segundo):", canales)
+            canal2 = elegir_de_lista("\nSegundo canal:", canales)
+            condicion = elegir_de_lista("\nCondición para graficar:", objeto.obtener_condiciones())
+            objeto.diferencia_interhemisferica(canal1, canal2, condicion)
