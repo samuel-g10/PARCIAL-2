@@ -277,3 +277,34 @@ def promedio_y_desviacion(self, eje1, eje2):
 
         nombre_sin_ext = self.nombre.replace(".mat", "")
         guardar_y_mostrar(nombre_sin_ext + "_boxplot_ejes" + str(eje1) + str(eje2))
+
+# =====================================================================
+# CLASE REGISTRO (punto extra): guarda todos los objetos y permite buscarlos
+# =====================================================================
+
+class Registro:
+    def __init__(self):
+        self.objetos = []
+
+    def agregar(self, objeto):
+        self.objetos.append(objeto)
+
+    def cantidad(self):
+        return len(self.objetos)
+
+    def listar(self):
+        if len(self.objetos) == 0:
+            print("Todavía no hay archivos cargados.")
+        for i in range(len(self.objetos)):
+            objeto = self.objetos[i]
+            print(i + 1, ")", objeto.tipo, "-", objeto.nombre)
+
+    def buscar(self, texto):
+        encontrados = []
+        for objeto in self.objetos:
+            if texto.lower() in objeto.nombre.lower():
+                encontrados.append(objeto)
+        return encontrados
+
+    def obtener(self, posicion):
+        return self.objetos[posicion - 1]
