@@ -203,4 +203,19 @@ class ArchivoMAT:
 
     def num_canales(self):
         return self.matriz.shape[0]
+    def num_puntos_2d(self):
+            return self.matriz.shape[1] * self.matriz.shape[2]
     
+    def operar_canales(self, funcion, canales, punto_min, punto_max):
+        """Aplica suma, resta o multiplicacion sobre 4 canales, entre punto_min y punto_max.
+        Grafica los 4 canales en un subplot y el resultado en otro."""
+    
+        matriz_2d = self.matriz.reshape(self.matriz.shape[0], -1)
+
+        tramo = matriz_2d[:, punto_min:punto_max].astype(float)
+    
+        tiempo = np.arange(punto_min, punto_max) / self.fs
+    
+        resultado = tramo[canales[0] - 1]
+        for i in range(1, len(canales)):
+            resultado = funcion(resultado, tramo[canales[i] - 1])
