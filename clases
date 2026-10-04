@@ -152,3 +152,18 @@ class ArchivoCSV:
         print(self.datos[[canal1, canal2, nombre_columna]].head())
         print("\nResumen de la nueva columna:")
         print(self.datos[nombre_columna].describe())
+   
+        datos_cond = self.datos[self.datos["condition"] == condicion]
+        plt.figure(figsize=(10, 5))
+        plt.plot(datos_cond.index.values, datos_cond[nombre_columna].values,
+                 color="purple", label=nombre_columna)
+        plt.axvline(0, color="red", linestyle="--", label="t = 0 ms")
+        plt.axhline(0, color="gray", linewidth=0.8)
+        plt.title("Diferencia interhemisférica " + nombre_columna +
+                  " - Condición " + str(condicion))
+        plt.xlabel("Tiempo (ms)")
+        plt.ylabel("Diferencia de amplitud (µV)")
+        plt.legend()
+
+        nombre_sin_ext = self.nombre.replace(".csv", "")
+        guardar_y_mostrar(nombre_sin_ext + "_dif_" + nombre_columna + "_cond" + str(condicion))
