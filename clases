@@ -142,3 +142,13 @@ class ArchivoCSV:
 
         nombre_sin_ext = self.nombre.replace(".csv", "")
         guardar_y_mostrar(nombre_sin_ext + "_cond" + str(condicion) + "_" + canal)
+
+    def diferencia_interhemisferica(self, canal1, canal2, condicion):
+
+        nombre_columna = canal1 + "-" + canal2
+        self.datos[nombre_columna] = self.datos[canal1] - self.datos[canal2]
+
+        print("\nSe creó la columna nueva:", nombre_columna)
+        print(self.datos[[canal1, canal2, nombre_columna]].head())
+        print("\nResumen de la nueva columna:")
+        print(self.datos[nombre_columna].describe())
