@@ -54,3 +54,34 @@ def guardar_y_mostrar(nombre):
     print("Gráfico guardado en:", ruta)
     plt.show()
     plt.close()
+
+# =====================================================================
+# FUNCIONES DE OPERACIÓN
+# =====================================================================
+
+def suma(a, b):
+    return a + b
+
+def resta(a, b):
+    return a - b
+
+def multiplicacion(a, b):
+    return a * b
+
+# =====================================================================
+# CLASE PARA ARCHIVOS CSV
+# =====================================================================
+
+class ArchivoCSV:
+
+    def __init__(self, ruta):
+        self.ruta = ruta
+        self.nombre = os.path.basename(ruta)
+        self.tipo = "CSV"
+
+        datos = pd.read_csv(ruta)
+
+        if "time_ms" not in datos.columns or "condition" not in datos.columns:
+            raise ValueError("El CSV debe tener las columnas 'time_ms' y 'condition'.")
+
+        self.datos = datos.set_index("time_ms")
