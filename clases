@@ -98,3 +98,47 @@ class ArchivoCSV:
         texto += "\n--- describe() ---\n"
         texto += self.datos.describe().to_string()
         return texto
+
+    def obtener_canales(self):
+        canales = []
+        for columna in self.datos.columns:
+            if columna != "subject" and columna != "condition":
+                canales.append(columna)
+        return canales
+
+    def obtener_condiciones(self):
+        return sorted(self.datos["condition"].unique())
+
+    def graficar_condicion(self, condicion, canal, canal_x, canal_y):
+        datos_cond = self.datos[self.datos["condition"] == condicion]
+        tiempo = datos_cond.index.values
+        senal = datos_cond[canal].values
+
+        plt.figure(figsize=(12, 9))
+
+        plt.subplot2grid((2, 3), (0, 0), colspan=3)
+        plt.stem(tiempo, senal, markerfmt=",", basefmt="gray")
+        plt.axvline(0, color="red", linestyle="--", label="t = 0 ms")
+        plt.title("Stem del canal " + canal)
+        plt.xlabel("Tiempo (ms)")
+        plt.ylabel("Amplitud (µV)")
+        plt.legend()
+
+        plt.subplot2grid((2, 3), (1, 0), colspan=2)
+        plt.hist(senal, bins=30, color="steelblue", edgecolor="black")
+        plt.title("Histograma del canal " + canal)
+        plt.xlabel("Amplitud (µV)")
+        plt.ylabel("Frecuencia (número de muestras)")
+
+        plt.subplot2grid((2, 3), (1, 2))
+        plt.scatter(datos_cond[canal_x].values, datos_cond[canal_y].values,
+                    s=5, alpha=0.5, color="darkgreen")
+        plt.title("Scatter " + canal_x + " vs " + canal_y)
+        plt.xlabel(canal_x + " (µV)")
+        plt.ylabel(canal_y + " (µV)")
+
+        plt.suptitle(self.nombre + " - Condición " + str(condicion))
+        plt.tight_layout()
+
+        nombre_sin_ext = self.nombre.replace(".csv", "")
+        guardar_y_mostrar(nombre_sin_ext + "_cond" + str(condicion) + "_" + canal)
