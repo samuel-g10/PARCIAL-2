@@ -74,3 +74,64 @@ def menu_csv(objeto):
             canal2 = elegir_de_lista("\nSegundo canal:", canales)
             condicion = elegir_de_lista("\nCondición para graficar:", objeto.obtener_condiciones())
             objeto.diferencia_interhemisferica(canal1, canal2, condicion)
+# ---------------------------------------------------------------------
+# SUBMENÚ MAT
+# ---------------------------------------------------------------------
+
+def elegir_cuatro_canales(total_canales):
+    canales = []
+    while len(canales) < 4:
+        numero = pedir_entero("Canal " + str(len(canales) + 1) + " de 4 (1-" +
+                              str(total_canales) + "): ", 1, total_canales)
+        if numero in canales:
+            print("Ese canal ya fue elegido, escoja otro.")
+        else:
+            canales.append(numero)
+    return canales
+
+
+def menu_mat(objeto):
+    while True:
+        print("\n--- Archivo MAT:", objeto.nombre, "---")
+        print("1. Ver variables del archivo (dimensiones y tipos)")
+        print("2. Operar 4 canales (suma, resta o multiplicación)")
+        print("3. Promedio y desviación estándar en dos ejes (boxplot)")
+        print("0. Volver")
+        opcion = pedir_entero("Opción: ", 0, 3)
+
+        if opcion == 0:
+            break
+
+        elif opcion == 1:
+            print(objeto)
+
+        elif opcion == 2:
+            print("Operaciones: 1) Suma  2) Resta  3) Multiplicación")
+            num_op = pedir_entero("Elija la operación: ", 1, 3)
+            if num_op == 1:
+                funcion = suma
+            elif num_op == 2:
+                funcion = resta
+            else:
+                funcion = multiplicacion
+
+            canales = elegir_cuatro_canales(objeto.num_canales())
+
+            total = objeto.num_puntos_2d()
+            print("La matriz en 2D tiene", total, "puntos por canal.")
+            print("(cada", objeto.matriz.shape[1], "puntos es un ensayo de",
+                  objeto.matriz.shape[1] / objeto.fs, "s)")
+            punto_min = pedir_entero("Punto mínimo (0-" + str(total - 2) + "): ", 0, total - 2)
+            punto_max = pedir_entero("Punto máximo (" + str(punto_min + 1) + "-" +
+                                     str(total) + "): ", punto_min + 1, total)
+
+            objeto.operar_canales(funcion, canales, punto_min, punto_max)
+
+        elif opcion == 3:
+            print("Ejes de la matriz: 0 = canales, 1 = muestras (tiempo), 2 = ensayos")
+            eje1 = pedir_entero("Primer eje (0-2): ", 0, 2)
+            eje2 = pedir_entero("Segundo eje (0-2): ", 0, 2)
+            while eje2 == eje1:
+                print("Error: los dos ejes deben ser diferentes.")
+                eje2 = pedir_entero("Segundo eje (0-2): ", 0, 2)
+            objeto.promedio_y_desviacion(eje1, eje2)
